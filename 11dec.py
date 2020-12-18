@@ -114,44 +114,150 @@ while input_room != output_room:
     input_room = copy.deepcopy(output_room)
     for row in range(0,len(output_room)):
         for column in range(0,len(output_room[row])):
-            # check adjacents
-            adjacent_count = 0
+            # check loss
+            los_count = 0
             if column > 0:
                 if input_room[row][column -1] == "#":
-                    adjacent_count += 1
+                    los_count += 1
             if column < (len(output_room[row]) -1):
                 if input_room[row][column +1] == "#":
-                    adjacent_count += 1
+                    los_count += 1
             if (column > 0) and (row > 0):
                 if input_room[row -1][column -1] == "#":
-                    adjacent_count += 1
+                    los_count += 1
             if (column < (len(output_room[row])-1)) and (row > 0):
                 if input_room[row -1][column +1] == "#":
-                    adjacent_count += 1
+                    los_count += 1
             if (column > 0) and (row < (len(input_room) -1 )):
                 if input_room[row +1][column -1] == "#":
-                    adjacent_count += 1
+                    los_count += 1
             if (column < (len(output_room[row])-1)) and (row < (len(input_room) -1 )):
                 if input_room[row +1][column +1] == "#":
-                    adjacent_count += 1
+                    los_count += 1
             if (row > 0):
                 if input_room[row -1][column] == "#":
-                    adjacent_count += 1
+                    los_count += 1
             if (row < (len(input_room) -1 )):
                 if input_room[row +1][column] == "#":
-                    adjacent_count += 1
+                    los_count += 1
     
-            if (input_room[row][column] == "L") and adjacent_count == 0: # if seat is empty and no adjacent seats
+            if (input_room[row][column] == "L") and los_count == 0: # if seat is empty and no los seats
                 #print(output_room[row][column])
                 output_room[row][column] = '#'
                 #print(print(output_room[row][column]))
-            elif (input_room[row][column] == '#') and adjacent_count >= 4: # If a seat is occupied (#) and four or more seats adjacent to it are also occupied, the seat becomes empty
+            elif (input_room[row][column] == '#') and los_count >= 4: # If a seat is occupied (#) and four or more seats los to it are also occupied, the seat becomes empty
                 output_room[row][column] = 'L'
             else:
                 #output_room[row][column] = input_room[row][column]
                 pass"""
 
 # part ii
+iteration = 0
+while input_room != output_room:
+    input_room = copy.deepcopy(output_room)
+    for row in range(0,len(output_room)):
+        for column in range(0,len(output_room[row])):
+            # check line of site
+            los_count = 0
+            # left
+            found_los = False
+            rel_x = 0 
+            rel_y = 0 
+            while (not found_los) and ((column + rel_x) >= 0):
+                found_los = (input_room[row][column + rel_x] == "#")
+                if found_los:
+                    los_count += 1
+                else:
+                    rel_x -= 1 
+            # right
+            found_los = False
+            rel_x = 0 
+            rel_y = 0 
+            while (not found_los) and ((column + rel_x) < len(output_room[row])):
+                found_los = (input_room[row][column + rel_x] == "#")
+                if found_los:
+                    los_count += 1 
+                else:
+                    rel_x += 1 
+            # up
+            found_los = False
+            rel_x = 0 
+            rel_y = 0 
+            while (not found_los) and ((row + rel_y) >= 0):
+                found_los = (input_room[row + rel_y][column] == "#")
+                if found_los:
+                    los_count += 1 
+                else:
+                    rel_y -= 1 
+            # down
+            found_los = False
+            rel_x = 0 
+            rel_y = 0 
+            while (not found_los) and ((row + rel_y) < len(output_room)):
+                found_los = (input_room[row + rel_y][column] == "#")
+                if found_los:
+                    los_count += 1 
+                else:
+                    rel_y += 1 
+
+            # up left
+            found_los = False
+            rel_x = 0 
+            rel_y = 0 
+            while (not found_los) and ((row + rel_y) >= 0) and ((column + rel_x) >= 0):
+                found_los = (input_room[row + rel_y][column + rel_x] == "#")
+                if found_los:
+                    los_count += 1 
+                else:
+                    rel_y -= 1 
+                    rel_x -= 1
+            # up right
+            found_los = False
+            rel_x = 0 
+            rel_y = 0 
+            while (not found_los) and ((row + rel_y) >= 0) and ((column + rel_x) < len(output_room[row])):
+                found_los = (input_room[row + rel_y][column + rel_x] == "#")
+                if found_los:
+                    los_count += 1 
+                else:
+                    rel_y -= 1 
+                    rel_x += 1
+            # down left
+            found_los = False
+            rel_x = 0 
+            rel_y = 0
+            while (not found_los) and ((row + rel_y) < len(output_room)) and ((column + rel_x) >= 0):
+                found_los = (input_room[row + rel_y][column + rel_x] == "#")
+                if found_los:
+                    los_count += 1 
+                else:
+                    rel_y += 1 
+                    rel_x -= 1
+            # down right
+            found_los = False
+            rel_x = 0 
+            rel_y = 0
+            while (not found_los) and ((row + rel_y) < len(output_room)) and ((column + rel_x) < len(output_room[row])):
+                found_los = (input_room[row + rel_y][column + rel_x] == "#")
+                if found_los:
+                    los_count += 1 
+                else:
+                    rel_y += 1 
+                    rel_x += 1 
+
+    
+            if (input_room[row][column] == "L") and los_count == 0: # if seat is empty and no los seats
+                #print(output_room[row][column])
+                output_room[row][column] = '#'
+                #print(print(output_room[row][column]))
+            elif (input_room[row][column] == '#') and los_count >= 5: # If a seat is occupied (#) and four or more seats los to it are also occupied, the seat becomes empty
+                output_room[row][column] = 'L'
+            else:
+                #output_room[row][column] = input_room[row][column]
+                pass
+            #print("iterating row "+ str(row) + "/" + str(len(input_room)) +" ; column "+ str(column)+ "/" + str(len(input_room[row])))
+    iteration += 1
+    print("this is iteration # " + str(iteration))
 
 occupied_count = 0
 for row in output_room:
